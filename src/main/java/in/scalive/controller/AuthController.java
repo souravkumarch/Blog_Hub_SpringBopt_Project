@@ -32,8 +32,9 @@ public class AuthController {
 	return new ResponseEntity<>(adto,HttpStatus.CREATED);
 	}
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid RegisterRequestDTO request,HttpSession session){
+	public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO request,HttpSession session){
 		AuthResponseDTO  adto = serv.login(request, session);
+		System.out.println("login controller called" +request.getPassword()+"   "+request.getEmail());
 		return ResponseEntity.ok(adto);
 	}
     @PostMapping("/logout")

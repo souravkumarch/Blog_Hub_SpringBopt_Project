@@ -3,6 +3,7 @@ package in.scalive.service;
 import org.springframework.stereotype.Service;
 
 import in.scalive.dto.AuthResponseDTO;
+import in.scalive.dto.LoginRequestDTO;
 import in.scalive.dto.RegisterRequestDTO;
 import in.scalive.entity.Author;
 import in.scalive.exception.ResourceAlreadyExistException;
@@ -38,7 +39,7 @@ public class AuthService {
 		adto.setMessage("Registration Successful");
 		return adto;
 	}
-	public AuthResponseDTO login(RegisterRequestDTO req ,HttpSession session) {
+	public AuthResponseDTO login(LoginRequestDTO req ,HttpSession session) {
 		  Author author =authrepo.findByEmail(req.getEmail()).orElse(null);
 		  if(author == null) {
 			  throw new ResourceNotFoundException("Invalid username Or Password");
