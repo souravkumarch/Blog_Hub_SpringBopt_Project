@@ -13,18 +13,19 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="categories")
+@Table(name = "categories")
 public class Category {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-  private Long id;
-	@Column(unique=true)
-  private String catName;
-  private String description;
-  @OneToMany(mappedBy="category",cascade=CascadeType.ALL)
-  private List<Post> post;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column(unique = true)
+	private String catName;
+	private String description;
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	private List<Post> post;
 }
