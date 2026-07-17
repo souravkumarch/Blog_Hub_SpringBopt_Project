@@ -89,7 +89,7 @@ public class Postcontroller {
 	}
 
 	@GetMapping("/getAll")
-	public ResponseEntity<List<PostResponseDTO>> getAll(@RequestParam String term) {
+	public ResponseEntity<List<PostResponseDTO>> getAll(@RequestParam(required = false) String term) {
 		List<Post> postlist = new ArrayList<>();
 		List<PostResponseDTO> responseList = new ArrayList<>();
 		if (term != null && !term.isBlank()) {
@@ -115,12 +115,12 @@ public class Postcontroller {
 	@GetMapping
 	public ResponseEntity<Page<PostResponseDTO>> getAll(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "3") int size, @RequestParam(defaultValue = "createdAt") String sortBy,
-			@RequestParam(defaultValue = "desc") int sortDir) {
+			@RequestParam(defaultValue = "desc") String sortDir) {
 		return ResponseEntity.ok(pserv.getAll(page, size, sortBy, sortBy));
 
 	}
-
-	public ResponseEntity<List<PostResponseDTO>> getpostByAuthor(@RequestAttribute("userId") Long userId) {
+     @GetMapping("/my-post")
+	public ResponseEntity<List<PostResponseDTO>> getMyPost(@RequestAttribute("userId") Long userId) {
 		List<Post> postlist = pserv.getPostByAuthor(userId);
 		List<PostResponseDTO> responseList = new ArrayList<>();
 		for (Post post : postlist) {
@@ -142,11 +142,14 @@ public class Postcontroller {
 	public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostUpdateDTO updatepost,
 			@RequestAttribute("userId") Long userId, @RequestAttribute("userRole") String userRole) {
 		  Post p = pserv.getPostById(id);
+		  System.out.println("update post chala "+p.getAuthor().getId()+" "+userId);
 		if (!userId.equals(p.getAuthor().getId()) && !userRole.equals("ADMIN")) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"Error:\"you can only update your own post\"}");
 
 		}
+		System.out.println("update post chala "+p.getAuthor().getId());
 		Post post = pserv.updatePost(updatepost, id);
+		System.out.println("update post chala "+p.getAuthor().getId());
 		PostResponseDTO resdto = new PostResponseDTO();
 		resdto.setId(post.getId());
 		resdto.setTitle(post.getTitle());
@@ -156,6 +159,7 @@ public class Postcontroller {
 		resdto.setAuthorName(post.getAuthor().getName());
 		resdto.setAuthorId(post.getAuthor().getId());
 		resdto.setCreateDateTime(post.getCreatedAt());
+		System.out.println("update post chala "+p.getAuthor().getId());
 		return ResponseEntity.ok(resdto);
 	}
 	@DeleteMapping("/{id}")
@@ -170,5 +174,6 @@ public class Postcontroller {
 		}
 		pserv.deletePost(id);
 	return	ResponseEntity.ok("Post deleted successfully");
+	
 	}
 }

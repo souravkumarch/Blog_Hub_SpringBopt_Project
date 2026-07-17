@@ -103,24 +103,33 @@ public class PostService {
 		}
 		return postrepo.findByAuthor(author);
 	}
-
+   
 	public Post updatePost(PostUpdateDTO updated, Long id) {
+        System.out.println("service ka update chala");
 		Post post = getPostById(id);
 		if (updated.getTitle() == null && updated.getContent() == null && updated.getAuthorId() == null
 				&& updated.getCategoryId() == null) {
 			throw new RuntimeException("Object can  not be null");
 		}
+		System.out.println("service ka update chala "+updated.getAuthorId());
+		
+		if(updated.getAuthorId() !=null) {
 		Author author = authrepo.findById(updated.getAuthorId()).orElse(null);
 		if (author == null) {
 			throw new ResourceNotFoundException("Author id is not found");
 		}
 		post.setAuthor(author);
-
+		}
+		
+		System.out.println("service ka update chala");
+		
+		if(updated.getCategoryId() !=null){
 		Category category = catrepo.findById(updated.getCategoryId()).orElse(null);
 		if (category == null) {
 			throw new ResourceNotFoundException("Category id  is not found");
 		}
 		post.setCategory(category);
+		}
 		if (updated.getTitle() != null) {
 			post.setTitle(updated.getTitle());
 		}
